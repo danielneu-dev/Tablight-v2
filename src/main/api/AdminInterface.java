@@ -9,5 +9,17 @@ public interface AdminInterface {
 
   void setStatus(int tableNumber, boolean status);
 
+  void addTable();
+
+  void removeTable(int tableNumber);
+
   ArrayList<Food> getFoodList();
+
+  void addFood();
+
+  void removeFood();
+
+  int getTransition_1();
+
+  int getTransition_2();
 }

@@ -18,7 +18,7 @@ public class FoodDAO extends Database implements FoodInterface {
 
     try {
       Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery("SELECT * FROM mahlzeit");
+      ResultSet resultSet = statement.executeQuery("SELECT * FROM mahlzeit ORDER BY sortieren ASC");
 
       while (resultSet.next()) {
         String name = resultSet.getString("bezeichnung");

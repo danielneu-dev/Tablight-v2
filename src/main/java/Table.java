@@ -13,8 +13,8 @@ public class Table {
     return tableNumber;
   }
 
-  public boolean getStatus() {
-    return status;
+  public String getStatus() {
+    return status ? "belegt" : "frei";
   }
 
   public void setStatus(boolean status) {
