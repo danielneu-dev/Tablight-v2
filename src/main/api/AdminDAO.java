@@ -3,6 +3,7 @@ package main.api;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 import main.java.Food;
 import main.java.Table;
 
-public class AdminDAO extends Database implements AdminInterface {
+public class AdminDAO implements AdminInterface {
+  private Connection connection = Database.getDatabase().getConnection();
 
   public ArrayList<Table> getAll() {
     ArrayList<Table> tableList = new ArrayList<Table>();

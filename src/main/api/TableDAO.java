@@ -1,5 +1,6 @@
 package main.api;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import main.java.Table;
 
-public class TableDAO extends Database implements TableInterface {
+public class TableDAO implements TableInterface {
+  private Connection connection = Database.getDatabase().getConnection();
+
   public ArrayList<Table> getFree() {
     ArrayList<Table> tableList = new ArrayList<Table>();
 

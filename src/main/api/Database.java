@@ -9,9 +9,9 @@ public class Database {
   private String user = PropertiesReader.getProperty("database.user");
   private String password = PropertiesReader.getProperty("database.password");
 
-  protected static Connection connection;
+  private Connection connection;
 
-  public Database() {
+  private Database() {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
       connection = DriverManager.getConnection(url, user, password);
@@ -23,5 +23,15 @@ public class Database {
       Logger.error("Fehler beim Laden des Treibers.");
       System.out.println("Fehler beim Laden des Treibers.");
     }
+  }
+
+  private static Database database = new Database();
+
+  public static Database getDatabase() {
+    return database;
+  }
+
+  public Connection getConnection() {
+    return connection;
   }
 }

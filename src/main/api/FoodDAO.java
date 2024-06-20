@@ -1,12 +1,14 @@
 package main.api;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import main.java.Food;
 
-public class FoodDAO extends Database implements FoodInterface {
+public class FoodDAO implements FoodInterface {
+  private Connection connection = Database.getDatabase().getConnection();
 
   public ArrayList<Food> getFoodList() {
     ArrayList<Food> foodList = new ArrayList<Food>();
