@@ -1,5 +1,13 @@
+# Ignore .DS_Store files
 .DS_Store
-config.properties
-log.txt
+
+# Ignore .gitignore file itself
+.gitignore
+
+# Ignore bin and .vscode directories
 bin/
 .vscode/
+
+# Ignore properties and log files
+config.properties
+log.txt
