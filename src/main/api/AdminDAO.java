@@ -8,15 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import main.java.Appetizer;
-import main.java.Dessert;
 import main.java.Food;
-import main.java.MainCourse;
 import main.java.Table;
 
 public class AdminDAO extends Database implements AdminInterface {
-  private int transition_1 = 0;
-  private int transition_2 = 0;
 
   public ArrayList<Table> getAll() {
     ArrayList<Table> tableList = new ArrayList<Table>();
@@ -75,28 +70,17 @@ public class AdminDAO extends Database implements AdminInterface {
 
   public ArrayList<Food> getFoodList() {
     ArrayList<Food> foodList = new ArrayList<Food>();
-    transition_1 = 0;
-    transition_2 = 0;
 
     try {
       Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery("SELECT * FROM mahlzeit ORDER BY sortieren ASC");
+      ResultSet resultSet = statement.executeQuery("SELECT * FROM mahlzeit");
 
       while (resultSet.next()) {
         String name = resultSet.getString("bezeichnung");
         double price = resultSet.getDouble("preis");
         String type = resultSet.getString("typ");
 
-        if (type.equals("Vorspeise")) {
-          foodList.add(new Appetizer(name, price));
-          transition_1++;
-          transition_2++;
-        } else if (type.equals("Hauptspeise")) {
-          foodList.add(new MainCourse(name, price));
-          transition_2++;
-        } else if (type.equals("Nachspeise")) {
-          foodList.add(new Dessert(name, price));
-        }
+        foodList.add(FoodFactory.createFood(type, name, price));
       }
     } catch (SQLException e) {
       Logger.error("Fehler beim Lesen der Datenbank.");
@@ -110,7 +94,6 @@ public class AdminDAO extends Database implements AdminInterface {
     String name = "";
     double price = 0;
     String type = "";
-    int sort = 0;
 
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -120,21 +103,12 @@ public class AdminDAO extends Database implements AdminInterface {
       price = Double.parseDouble(reader.readLine().trim());
       System.out.print("Typ (Vorspeise, Hauptspeise, Nachspeise): ");
       type = reader.readLine();
-      if (type.equals("Vorspeise")) {
-        sort = 1;
-      } else if (type.equals("Hauptspeise")) {
-        sort = 2;
-      } else if (type.equals("Nachspeise")) {
-        sort = 3;
-      }
 
       PreparedStatement statement = connection
-          .prepareStatement("INSERT INTO mahlzeit (bezeichnung, preis, typ, sortieren) VALUES (?, ?, ?, ?)");
-      Logger.info(" " + sort);
+          .prepareStatement("INSERT INTO mahlzeit (bezeichnung, preis, typ) VALUES (?, ?, ?)");
       statement.setString(1, name);
       statement.setDouble(2, price);
       statement.setString(3, type);
-      statement.setInt(4, sort);
       statement.executeUpdate();
     } catch (IOException e) {
       Logger.error("Fehler beim Lesen der Eingabe.");
@@ -161,13 +135,5 @@ public class AdminDAO extends Database implements AdminInterface {
       Logger.error("Fehler beim Schreiben in die Datenbank.");
       System.out.println("Fehler beim Schreiben in die Datenbank.");
     }
-  }
-
-  public int getTransition_1() {
-    return transition_1;
-  }
-
-  public int getTransition_2() {
-    return transition_2;
   }
 }

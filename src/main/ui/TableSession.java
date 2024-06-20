@@ -70,24 +70,12 @@ public class TableSession {
     App.clearConsole();
     System.out.println("Bestellung aufnehmen");
     ArrayList<Food> foodList = databaseFood.getFoodList();
-    int transition_1 = databaseFood.getTransition_1();
-    int transition_2 = databaseFood.getTransition_2();
-    int counter = 0;
 
     for (int i = 0; i < foodList.size(); i++) {
-      if (counter == 0) {
-        System.out.println("\n--- Vorspeisen ---");
-      } else if (counter == transition_1) {
-        System.out.println("\n--- Hauptspeisen ---");
-      } else if (counter == transition_2) {
-        System.out.println("\n--- Nachspeisen ---");
-      }
-      counter++;
       System.out.println("[" + (i + 1) + "] " + foodList.get(i).getName() + " ("
           + decimalFormat.format(foodList.get(i).getPrice()) + "€)");
     }
     System.out.println("\n\n[" + (foodList.size() + 1) + "] Bestellung abschließen\n");
-    counter = 0;
 
     int option = 0;
     do {

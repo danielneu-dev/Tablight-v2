@@ -8,11 +8,11 @@ public class Logger {
   private static final String filePath = "src/log.txt";
 
   public static void info(String message) {
-    writeFile("[INFO] " + message);
+    writeFile("🟩 [INFO] " + message);
   }
 
   public static void error(String message) {
-    writeFile("[ERROR] " + message);
+    writeFile("🟥 [ERROR] " + message);
   }
 
   public static String getTime() {

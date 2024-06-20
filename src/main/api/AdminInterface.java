@@ -18,8 +18,4 @@ public interface AdminInterface {
   void addFood();
 
   void removeFood();
-
-  int getTransition_1();
-
-  int getTransition_2();
 }
