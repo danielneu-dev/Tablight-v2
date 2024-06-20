@@ -4,10 +4,6 @@
 # Ignore .gitignore file itself
 .gitignore
 
-# Ignore bin and .vscode directories
-bin/
-.vscode/
-
 # Ignore properties and log files
 config.properties
 log.txt
