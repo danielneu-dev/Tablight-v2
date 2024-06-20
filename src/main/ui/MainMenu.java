@@ -6,8 +6,15 @@ import java.io.InputStreamReader;
 import main.api.Logger;
 import main.api.Pin;
 import main.java.App;
+import main.api.ErrorDecorator;
+import main.api.InfoDecorator;
+import main.api.LoggerInterface;
+import main.api.PrintDecorator;
 
 public class MainMenu {
+  private LoggerInterface info = new InfoDecorator(new PrintDecorator(new Logger()));
+  private LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
+
   public void show() {
     System.out.println("Willkommen im Restaurant!");
     while (!Pin.check())
@@ -21,51 +28,45 @@ public class MainMenu {
       try {
         String input = reader.readLine().trim();
         option = Integer.parseInt(input);
-        Logger.info("Option: " + option);
+        info.writeFile("Option: " + option);
 
         switch (option) {
           case 1:
-            Logger.info("Option 1: Verwaltungsmenü wird geöffnet.");
+            info.writeFile("Option 1: Verwaltungsmenü wird geöffnet.");
             AdminMenu adminMenu = new AdminMenu();
             adminMenu.show();
             break;
           case 2:
-            Logger.info("Option 2: Tisch belegen");
+            info.writeFile("Option 2: Tisch belegen");
             TableMenu tableMenu = new TableMenu();
             if (tableMenu.getAmount() == 0) {
-              Logger.info("Alle Tische sind belegt.");
-              System.out.println("Alle Tische sind belegt.");
+              info.writeFile("Alle Tische sind belegt.");
               break;
             } else {
-              Logger.info("Tisch verfügbar.");
+              info.writeFile("Tisch verfügbar.");
               App.clearConsole();
               tableMenu.show();
               break;
             }
           case 3:
             App.clearConsole();
-            Logger.info("Das Programm wird beendet.\n");
-            System.out.println("Das Programm wird beendet.\n");
+            info.writeFile("Das Programm wird beendet.\n");
             break;
           default:
-            Logger.error("Ungültige Zahl.");
-            System.out.println("Ungültige Zahl.");
+            error.writeFile("Ungültige Zahl.");
             break;
         }
       } catch (NumberFormatException e) {
-        Logger.info("Ungültige Eingabe.");
-        System.out.println("Ungültige Eingabe.");
+        info.writeFile("Ungültige Eingabe.");
       } catch (IOException e) {
-        Logger.error("Fehler beim Lesen der Eingabe.");
-        System.out.println("Fehler beim Lesen der Eingabe.");
+        error.writeFile("Fehler beim Lesen der Eingabe.");
       }
     } while (option != 3);
 
     try {
       reader.close();
     } catch (IOException e) {
-      Logger.error("Fehler beim Schließen des Readers.");
-      System.out.println("Fehler beim Schließen des Readers.");
+      error.writeFile("Fehler beim Schließen des Readers.");
     }
   }
 

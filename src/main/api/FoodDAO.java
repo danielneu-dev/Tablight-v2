@@ -10,6 +10,9 @@ import main.java.Food;
 public class FoodDAO implements FoodInterface {
   private Connection connection = Database.getDatabase().getConnection();
 
+  private LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
+  private LoggerInterface info = new InfoDecorator(new Logger());
+
   public ArrayList<Food> getFoodList() {
     ArrayList<Food> foodList = new ArrayList<Food>();
 
@@ -24,9 +27,9 @@ public class FoodDAO implements FoodInterface {
 
         foodList.add(FoodFactory.createFood(type, name, price));
       }
+      info.writeFile("Speisekarte erfolgreich geladen.");
     } catch (SQLException e) {
-      Logger.error("Fehler beim Lesen der Datenbank.");
-      System.out.println("Fehler beim Lesen der Datenbank.");
+      error.writeFile("Fehler beim Lesen der Datenbank.");
     }
 
     return foodList;

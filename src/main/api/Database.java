@@ -9,19 +9,20 @@ public class Database {
   private String user = PropertiesReader.getProperty("database.user");
   private String password = PropertiesReader.getProperty("database.password");
 
+  private LoggerInterface info = new InfoDecorator(new PrintDecorator(new Logger()));
+  private LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
+
   private Connection connection;
 
   private Database() {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
       connection = DriverManager.getConnection(url, user, password);
-      Logger.info("Datenbankverbindung erfolgreich hergestellt.");
+      info.writeFile("Datenbankverbindung erfolgreich hergestellt.");
     } catch (SQLException e) {
-      Logger.error("Fehler beim Herstellen der Datenbankverbindung.");
-      System.out.println("Fehler beim Herstellen der Datenbankverbindung.");
+      error.writeFile("Fehler beim Herstellen der Datenbankverbindung.");
     } catch (ClassNotFoundException e) {
-      Logger.error("Fehler beim Laden des Treibers.");
-      System.out.println("Fehler beim Laden des Treibers.");
+      error.writeFile("Fehler beim Laden des Treibers.");
     }
   }
 

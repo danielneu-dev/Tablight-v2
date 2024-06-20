@@ -11,11 +11,18 @@ import main.api.Logger;
 import main.api.Pin;
 import main.java.App;
 import main.java.Food;
+import main.api.ErrorDecorator;
+import main.api.InfoDecorator;
+import main.api.LoggerInterface;
+import main.api.PrintDecorator;
 
 public class TableSession {
   private int tableNumber;
   private FoodInterface databaseFood = new FoodDAO();
   private ArrayList<Food> orderTaken = new ArrayList<Food>();
+
+  private LoggerInterface info = new InfoDecorator(new PrintDecorator(new Logger()));
+  private LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
 
   private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
@@ -48,28 +55,24 @@ public class TableSession {
             System.out.println("Tischsitzung beenden");
             while (!Pin.check())
               ;
-            Logger.info("Tischsitzung beendet.");
-            System.out.println("Tischsitzung beendet.");
+            info.writeFile("Tischsitzung beendet.");
             break;
           default:
-            Logger.error("Ungültige Eingabe.");
-            System.out.println("Ungültige Eingabe.");
+            error.writeFile("Ungültige Eingabe.");
             break;
         }
       } catch (NumberFormatException e) {
-        Logger.error("Ungültige Eingabe.");
-        System.out.println("Ungültige Eingabe.");
+        error.writeFile("Ungültige Eingabe.");
       } catch (IOException e) {
-        Logger.error("Fehler beim Lesen der Eingabe.");
-        System.out.println("Fehler beim Lesen der Eingabe.");
+        error.writeFile("Fehler beim Lesen der Eingabe.");
       }
     } while (option != 3);
   }
 
   private void takeOrder() {
     App.clearConsole();
-    System.out.println("Bestellung aufnehmen");
     ArrayList<Food> foodList = databaseFood.getFoodList();
+    System.out.println("Bestellung aufnehmen");
 
     for (int i = 0; i < foodList.size(); i++) {
       System.out.println("[" + (i + 1) + "] " + foodList.get(i).getName() + " ("
@@ -84,22 +87,17 @@ public class TableSession {
       try {
         option = Integer.parseInt(reader.readLine());
         if (option == foodList.size() + 1) {
-          Logger.info("Bestellung abgeschlossen.");
-          System.out.println("Bestellung abgeschlossen.");
+          info.writeFile("Bestellung abgeschlossen.");
         } else if (option < 1 || option > foodList.size()) {
-          Logger.error("Ungültige Eingabe.");
-          System.out.println("Ungültige Eingabe.");
+          error.writeFile("Ungültige Eingabe.");
         } else {
           orderTaken.add(foodList.get(option - 1));
-          Logger.info("Bestellung aufgenommen: " + foodList.get(option - 1).getName());
-          System.out.println("Bestellung aufgenommen: " + foodList.get(option - 1).getName());
+          info.writeFile("Bestellung aufgenommen: " + foodList.get(option - 1).getName());
         }
       } catch (NumberFormatException e) {
-        Logger.error("Ungültige Eingabe.");
-        System.out.println("Ungültige Eingabe.");
+        error.writeFile("Ungültige Eingabe.");
       } catch (IOException e) {
-        Logger.error("Fehler beim Lesen der Eingabe.");
-        System.out.println("Fehler beim Lesen der Eingabe.");
+        error.writeFile("Fehler beim Lesen der Eingabe.");
       }
     } while (option != foodList.size() + 1);
     App.clearConsole();

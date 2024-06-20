@@ -10,11 +10,18 @@ import main.api.Logger;
 import main.java.App;
 import main.java.Food;
 import main.java.Table;
+import main.api.ErrorDecorator;
+import main.api.InfoDecorator;
+import main.api.LoggerInterface;
+import main.api.PrintDecorator;
 
 public class AdminMenu {
   private ArrayList<Table> tableList;
   private ArrayList<Food> foodList;
   private AdminInterface database;
+
+  private LoggerInterface info = new InfoDecorator(new PrintDecorator(new Logger()));
+  private LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
 
   private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
@@ -25,7 +32,7 @@ public class AdminMenu {
   }
 
   public void show() {
-    Logger.info("Admin-Menu wird angezeigt.");
+    info.writeFile("Admin-Menu wird angezeigt.");
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     int option = 0;
 
@@ -35,33 +42,28 @@ public class AdminMenu {
       try {
         String input = reader.readLine().trim();
         option = Integer.parseInt(input);
-        Logger.info("Option: " + option);
 
         switch (option) {
           case 1:
-            Logger.info("Option 1: Tische verwalten");
+            info.writeFile("Option 1: Tische verwalten");
             manageTableList();
             break;
           case 2:
-            Logger.info("Option 2: Speisen verwalten");
+            info.writeFile("Option 2: Speisen verwalten");
             manageFoodList();
             break;
           case 3:
             App.clearConsole();
-            Logger.info("Das Programm wird beendet.\n");
-            System.out.println("Das Programm wird beendet.\n");
+            info.writeFile("Das Programm wird beendet.\n");
             break;
           default:
-            Logger.error("Ungültige Zahl.");
-            System.out.println("Ungültige Zahl.");
+            error.writeFile("Ungültige Zahl.");
             break;
         }
       } catch (NumberFormatException e) {
-        Logger.info("Ungültige Eingabe.");
-        System.out.println("Ungültige Eingabe.");
+        info.writeFile("Ungültige Eingabe.");
       } catch (Exception e) {
-        Logger.error("Fehler beim Lesen der Eingabe.");
-        System.out.println("Fehler beim Lesen der Eingabe.");
+        error.writeFile("Fehler beim Lesen der Eingabe.");
       }
     } while (option != 3);
   }
@@ -102,47 +104,41 @@ public class AdminMenu {
       try {
         String input = reader.readLine().trim();
         option = Integer.parseInt(input);
-        Logger.info("Option: " + option);
 
         switch (option) {
           case 1:
             App.clearConsole();
             showTableList();
-            Logger.info("Option 1: Tischstatus ändern");
-            System.out.println("\nTischstatus ändern");
+            info.writeFile("Option 1: Tischstatus ändern");
             System.out.print("Tischnummer: ");
             int tableNumber = Integer.parseInt(reader.readLine().trim());
             System.out.print("Status (true(belegt)/false(frei)): ");
             boolean status = Boolean.parseBoolean(reader.readLine().trim());
             database.setStatus(tableNumber, status);
-            Logger.info("[" + tableNumber + "] wurde auf " + status + " gesetzt.");
+            info.writeFile("[" + tableNumber + "] wurde auf " + status + " gesetzt.");
             break;
           case 2:
-            Logger.info("Option 2: Tisch hinzufügen");
+            info.writeFile("Option 2: Tisch hinzufügen");
             database.addTable();
             break;
           case 3:
-            Logger.info("Option 3: Tisch entfernen");
+            info.writeFile("Option 3: Tisch entfernen");
             System.out.print("Tischnummer: ");
             int tableNumberToRemove = Integer.parseInt(reader.readLine().trim());
             database.removeTable(tableNumberToRemove);
             break;
           case 4:
             App.clearConsole();
-            Logger.info("Zurück zum Hauptmenü.");
-            System.out.println("Zurück zum Hauptmenü.");
+            info.writeFile("Zurück zum Hauptmenü.");
             break;
           default:
-            Logger.error("Ungültige Zahl.");
-            System.out.println("Ungültige Zahl.");
+            error.writeFile("Ungültige Zahl.");
             break;
         }
       } catch (NumberFormatException e) {
-        Logger.info("Ungültige Eingabe.");
-        System.out.println("Ungültige Eingabe.");
+        info.writeFile("Ungültige Eingabe.");
       } catch (Exception e) {
-        Logger.error("Fehler beim Lesen der Eingabe.");
-        System.out.println("Fehler beim Lesen der Eingabe.");
+        error.writeFile("Fehler beim Lesen der Eingabe.");
       }
     } while (option != 4);
   }
@@ -159,33 +155,28 @@ public class AdminMenu {
       try {
         String input = reader.readLine().trim();
         option = Integer.parseInt(input);
-        Logger.info("Option: " + option);
 
         switch (option) {
           case 1:
-            Logger.info("Option 1: Speise hinzufügen");
+            info.writeFile("Option 1: Speise hinzufügen");
             database.addFood();
             break;
           case 2:
-            Logger.info("Option 2: Speise entfernen");
+            info.writeFile("Option 2: Speise entfernen");
             database.removeFood();
             break;
           case 3:
             App.clearConsole();
-            Logger.info("Zurück zum Hauptmenü.");
-            System.out.println("Zurück zum Hauptmenü.");
+            info.writeFile("Zurück zum Hauptmenü.");
             break;
           default:
-            Logger.error("Ungültige Zahl.");
-            System.out.println("Ungültige Zahl.");
+            error.writeFile("Ungültige Zahl.");
             break;
         }
       } catch (NumberFormatException e) {
-        Logger.info("Ungültige Eingabe.");
-        System.out.println("Ungültige Eingabe.");
+        info.writeFile("Ungültige Eingabe.");
       } catch (Exception e) {
-        Logger.error("Fehler beim Lesen der Eingabe.");
-        System.out.println("Fehler beim Lesen der Eingabe.");
+        error.writeFile("Fehler beim Lesen der Eingabe.");
       }
     } while (option != 3);
   }

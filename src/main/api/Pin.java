@@ -7,6 +7,9 @@ import main.java.App;
 
 public class Pin {
   public static boolean check() {
+    LoggerInterface info = new InfoDecorator(new PrintDecorator(new Logger()));
+    LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
+
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     String pin = PropertiesReader.getProperty("pin");
     String input = "";
@@ -16,19 +19,17 @@ public class Pin {
       input = reader.readLine();
 
       if (input.equals(pin)) {
-        Logger.info("PIN korrekt.");
+        info.writeFile("PIN korrekt.");
         App.clearConsole();
         return true;
       } else {
         App.clearConsole();
-        Logger.error("PIN falsch.");
-        System.out.println("PIN falsch.");
+        error.writeFile("PIN falsch.");
         return false;
       }
 
     } catch (IOException e) {
-      Logger.error("Fehler beim Lesen der Eingabe.");
-      System.out.println("Fehler beim Lesen der Eingabe.");
+      error.writeFile("Fehler beim Lesen der Eingabe.");
     }
 
     return false;

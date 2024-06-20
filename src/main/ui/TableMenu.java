@@ -9,10 +9,17 @@ import main.api.TableDAO;
 import main.api.TableInterface;
 import main.java.App;
 import main.java.Table;
+import main.api.ErrorDecorator;
+import main.api.InfoDecorator;
+import main.api.LoggerInterface;
+import main.api.PrintDecorator;
 
 public class TableMenu {
   private ArrayList<Table> tableList;
   private TableInterface database;
+
+  private LoggerInterface info = new InfoDecorator(new PrintDecorator(new Logger()));
+  private LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
 
   public TableMenu() {
     database = new TableDAO();
@@ -38,11 +45,9 @@ public class TableMenu {
     try {
       tableNumber = Integer.parseInt(reader.readLine().trim());
     } catch (NumberFormatException e) {
-      Logger.error("Ungültige Eingabe.");
-      System.out.println("Ungültige Eingabe.");
+      error.writeFile("Ungültige Eingabe.");
     } catch (IOException e) {
-      Logger.error("Fehler beim Lesen der Eingabe.");
-      System.out.println("Fehler beim Lesen der Eingabe.");
+      error.writeFile("Fehler beim Lesen der Eingabe.");
     }
 
     for (Table table : tableList) {
@@ -50,19 +55,19 @@ public class TableMenu {
         database.setStatus(tableNumber, true);
         tableFound = true;
         App.clearConsole();
-        Logger.info("Tisch " + tableNumber + " wurde belegt.");
         break;
       }
     }
 
     if (tableFound) {
+      info.writeFile("Tisch " + tableNumber + " wurde belegt.");
       TableSession tableSession = new TableSession(tableNumber);
       tableSession.show();
       App.clearConsole();
       database.setStatus(tableNumber, false);
+      info.writeFile("Tisch " + tableNumber + " wurde freigegeben.");
     } else {
-      Logger.error("Tisch nicht gefunden.");
-      System.out.println("Tisch nicht gefunden.");
+      error.writeFile("Tisch nicht gefunden.");
     }
   }
 }

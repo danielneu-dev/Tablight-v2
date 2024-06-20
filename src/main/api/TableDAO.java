@@ -11,6 +11,9 @@ import main.java.Table;
 public class TableDAO implements TableInterface {
   private Connection connection = Database.getDatabase().getConnection();
 
+  private LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
+  private LoggerInterface info = new InfoDecorator(new PrintDecorator(new Logger()));
+
   public ArrayList<Table> getFree() {
     ArrayList<Table> tableList = new ArrayList<Table>();
 
@@ -25,9 +28,9 @@ public class TableDAO implements TableInterface {
         Table temp = new Table(tableNumber, status);
         tableList.add(temp);
       }
+      info.writeFile("Freie Tische erfolgreich geladen.");
     } catch (SQLException e) {
-      Logger.error("Fehler beim Lesen der Datenbank.");
-      System.out.println("Fehler beim Lesen der Datenbank.");
+      error.writeFile("Fehler beim Lesen der Datenbank.");
     }
 
     return tableList;
@@ -39,9 +42,14 @@ public class TableDAO implements TableInterface {
       update.setBoolean(1, status);
       update.setInt(2, tableNumber);
       update.executeUpdate();
+
+      if (status) {
+        info.writeFile("Tisch " + tableNumber + " als belegt markiert.");
+      } else {
+        info.writeFile("Tisch " + tableNumber + " als frei markiert.");
+      }
     } catch (SQLException e) {
-      Logger.error("Fehler beim Schreiben in die Datenbank.");
-      System.out.println("Fehler beim Schreiben in die Datenbank.");
+      error.writeFile("Fehler beim Schreiben in die Datenbank.");
     }
   }
 }

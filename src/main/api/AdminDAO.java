@@ -14,6 +14,7 @@ import main.java.Table;
 
 public class AdminDAO implements AdminInterface {
   private Connection connection = Database.getDatabase().getConnection();
+  private LoggerInterface error = new ErrorDecorator(new PrintDecorator(new Logger()));
 
   public ArrayList<Table> getAll() {
     ArrayList<Table> tableList = new ArrayList<Table>();
@@ -30,8 +31,7 @@ public class AdminDAO implements AdminInterface {
         tableList.add(temp);
       }
     } catch (SQLException e) {
-      Logger.error("Fehler beim Lesen der Datenbank.");
-      System.out.println("Fehler beim Lesen der Datenbank.");
+      error.writeFile("Fehler beim Lesen der Datenbank.");
     }
 
     return tableList;
@@ -44,8 +44,7 @@ public class AdminDAO implements AdminInterface {
       update.setInt(2, tableNumber);
       update.executeUpdate();
     } catch (SQLException e) {
-      Logger.error("Fehler beim Schreiben in die Datenbank.");
-      System.out.println("Fehler beim Schreiben in die Datenbank.");
+      error.writeFile("Fehler beim Schreiben in die Datenbank.");
     }
   }
 
@@ -54,8 +53,7 @@ public class AdminDAO implements AdminInterface {
       Statement statement = connection.createStatement();
       statement.executeUpdate("INSERT INTO tisch (status) VALUES (0)");
     } catch (SQLException e) {
-      Logger.error("Fehler beim Schreiben in die Datenbank.");
-      System.out.println("Fehler beim Schreiben in die Datenbank.");
+      error.writeFile("Fehler beim Schreiben in die Datenbank.");
     }
   }
 
@@ -65,8 +63,7 @@ public class AdminDAO implements AdminInterface {
       statement.setInt(1, tableNumber);
       statement.executeUpdate();
     } catch (SQLException e) {
-      Logger.error("Fehler beim Schreiben in die Datenbank.");
-      System.out.println("Fehler beim Schreiben in die Datenbank.");
+      error.writeFile("Fehler beim Schreiben in die Datenbank.");
     }
   }
 
@@ -85,8 +82,7 @@ public class AdminDAO implements AdminInterface {
         foodList.add(FoodFactory.createFood(type, name, price));
       }
     } catch (SQLException e) {
-      Logger.error("Fehler beim Lesen der Datenbank.");
-      System.out.println("Fehler beim Lesen der Datenbank.");
+      error.writeFile("Fehler beim Lesen der Datenbank.");
     }
 
     return foodList;
@@ -113,11 +109,9 @@ public class AdminDAO implements AdminInterface {
       statement.setString(3, type);
       statement.executeUpdate();
     } catch (IOException e) {
-      Logger.error("Fehler beim Lesen der Eingabe.");
-      System.out.println("Fehler beim Lesen der Eingabe.");
+      error.writeFile("Fehler beim Lesen der Eingabe.");
     } catch (SQLException e) {
-      Logger.error("Fehler beim Schreiben in die Datenbank.");
-      System.out.println("Fehler beim Schreiben in die Datenbank.");
+      error.writeFile("Fehler beim Schreiben in die Datenbank.");
     }
   }
 
@@ -131,11 +125,9 @@ public class AdminDAO implements AdminInterface {
       statement.setInt(1, number);
       statement.executeUpdate();
     } catch (IOException e) {
-      Logger.error("Fehler beim Lesen der Eingabe.");
-      System.out.println("Fehler beim Lesen der Eingabe.");
+      error.writeFile("Fehler beim Lesen der Eingabe.");
     } catch (SQLException e) {
-      Logger.error("Fehler beim Schreiben in die Datenbank.");
-      System.out.println("Fehler beim Schreiben in die Datenbank.");
+      error.writeFile("Fehler beim Schreiben in die Datenbank.");
     }
   }
 }
